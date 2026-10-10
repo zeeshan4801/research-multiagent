@@ -13,8 +13,8 @@ groq_llm = LLM(
 
     api_key=os.getenv("GROQ_API_KEY"),
 
-    temperature=0.1,
+    temperature=0.2,
 
-    max_tokens=1500,
+    max_tokens=1500
 
 )
