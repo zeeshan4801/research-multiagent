@@ -3,22 +3,24 @@ from crewai import Agent
 from config.llm_config import groq_llm
 
 
+
 analyst_agent = Agent(
 
-    role="Research Data Analyst",
+    role="Research Analyst",
 
     goal="""
-    Analyze collected research data.
-    Find important patterns,
-    trends and insights.
+    Analyze verified information
+    and create useful insights.
     """,
 
     backstory="""
-    You are a professional research analyst
-    who converts raw information into insights.
+    You convert research data
+    into meaningful conclusions.
     """,
 
     llm=groq_llm,
+
+    max_iter=2,
 
     verbose=True
 )
