@@ -1,23 +1,27 @@
-import sys
 import os
+import sys
+import time
 
-# Fix imports on Streamlit Cloud
+
+# --------------------------------
+# Fix Streamlit Cloud imports
+# --------------------------------
+
 sys.path.append(
     os.path.dirname(os.path.abspath(__file__))
 )
 
 
 import streamlit as st
-import time
 
 
 from crew.research_team import run_research
 
 
 
-# -----------------------------
+# --------------------------------
 # Page Configuration
-# -----------------------------
+# --------------------------------
 
 st.set_page_config(
 
@@ -25,65 +29,61 @@ st.set_page_config(
 
     page_icon="🧠",
 
-    layout="wide",
-
-    initial_sidebar_state="expanded"
+    layout="wide"
 
 )
 
 
 
-# -----------------------------
+# --------------------------------
 # Custom CSS
-# -----------------------------
+# --------------------------------
 
 st.markdown(
 """
 <style>
 
-body {
-
-    background-color:#0f172a;
-
-}
-
-
 .main-title {
 
-    font-size:45px;
-
+    font-size:48px;
     font-weight:800;
-
-    color:#38bdf8;
-
     text-align:center;
+    color:#38bdf8;
 
 }
 
 
 .subtitle {
 
-    font-size:18px;
-
-    color:#94a3b8;
-
     text-align:center;
+    font-size:18px;
+    color:#64748b;
 
 }
 
 
-
-.agent-card {
+.agent-box {
 
     padding:15px;
 
     border-radius:12px;
 
-    background:#1e293b;
+    background:#f1f5f9;
 
-    color:white;
+    margin:10px 0;
 
-    margin-bottom:10px;
+    font-size:18px;
+
+}
+
+
+.report-box {
+
+    padding:20px;
+
+    border-radius:15px;
+
+    background:#ffffff;
 
 }
 
@@ -94,11 +94,9 @@ body {
 
     height:50px;
 
-    border-radius:12px;
-
     font-size:18px;
 
-    font-weight:bold;
+    border-radius:10px;
 
 }
 
@@ -108,28 +106,28 @@ body {
 """,
 
 unsafe_allow_html=True
+
 )
 
 
 
-# -----------------------------
+# --------------------------------
 # Header
-# -----------------------------
+# --------------------------------
 
 
 st.markdown(
 
 """
 <div class="main-title">
-🧠 AI Research Multi-Agent Team
-</div>
 
-<br>
+🧠 AI Research Multi-Agent Team
+
+</div>
 
 <div class="subtitle">
 
-Autonomous AI researchers working together
-to create professional reports
+Autonomous AI researchers creating professional reports
 
 </div>
 
@@ -140,27 +138,23 @@ unsafe_allow_html=True
 )
 
 
-
 st.write("")
 
 
 
-# -----------------------------
+# --------------------------------
 # Sidebar
-# -----------------------------
+# --------------------------------
 
 
 with st.sidebar:
 
 
-    st.header("⚙️ System Information")
+    st.header("🤖 AI Team")
 
 
-    st.write(
-
+    st.markdown(
     """
-    **AI Team Members**
-
     📋 Research Planner
 
     🔎 Research Collector
@@ -172,7 +166,6 @@ with st.sidebar:
     ✍️ Report Writer
 
     """
-
     )
 
 
@@ -180,30 +173,26 @@ with st.sidebar:
 
 
     st.info(
-
         "Powered by CrewAI + Groq + Streamlit"
-
     )
 
 
 
-# -----------------------------
-# User Input
-# -----------------------------
+# --------------------------------
+# Input
+# --------------------------------
 
 
 topic = st.text_area(
 
     "🔍 Enter your research topic",
 
-    placeholder=
-    """
-    Example:
+    placeholder="""
+Example:
 
-    Impact of Artificial Intelligence
-    on education in 2026
-
-    """,
+Analyze the future of Artificial Intelligence
+in healthcare from 2025 to 2030.
+""",
 
     height=120
 
@@ -211,9 +200,9 @@ topic = st.text_area(
 
 
 
-# -----------------------------
-# Agents Display
-# -----------------------------
+# --------------------------------
+# Agents
+# --------------------------------
 
 
 agents = [
@@ -232,9 +221,9 @@ agents = [
 
 
 
-# -----------------------------
-# Run Research
-# -----------------------------
+# --------------------------------
+# Run System
+# --------------------------------
 
 
 if st.button("🚀 Start AI Research"):
@@ -243,7 +232,7 @@ if st.button("🚀 Start AI Research"):
     if not topic.strip():
 
         st.warning(
-            "Please enter a research topic first."
+            "Please enter a research topic."
         )
 
         st.stop()
@@ -251,77 +240,65 @@ if st.button("🚀 Start AI Research"):
 
 
     st.subheader(
-        "🤖 Agent Activity"
+        "⚙️ Agent Activity"
     )
 
 
-    status_box = st.empty()
-
+    status = st.empty()
 
     progress = st.progress(0)
-
-
-
-    for index, agent in enumerate(agents):
-
-
-        status_box.markdown(
-
-        f"""
-        <div class="agent-card">
-
-        ⚡ Currently working:
-
-        <b>{agent}</b>
-
-        </div>
-
-        """,
-
-        unsafe_allow_html=True
-
-        )
-
-
-        progress.progress(
-
-            int(
-                ((index+1)/len(agents))*100
-            )
-
-        )
-
-
-        time.sleep(1)
-
-
-
-    status_box.success(
-
-        "All agents completed their tasks. Generating final report..."
-
-    )
 
 
 
     try:
 
 
-        with st.spinner(
+        # Visual agent progress
 
-            "🧠 AI team is preparing your research report..."
-
-        ):
+        for index, agent in enumerate(agents):
 
 
-            result = run_research(topic)
+            status.markdown(
+
+            f"""
+            <div class="agent-box">
+
+            ⚡ Working:
+
+            <b>{agent}</b>
+
+            </div>
+            """,
+
+            unsafe_allow_html=True
+
+            )
+
+
+            progress.progress(
+                int(
+                    ((index + 1) / len(agents)) * 100
+                )
+            )
+
+
+            time.sleep(0.7)
 
 
 
-        st.success(
+        status.info(
+            "🧠 CrewAI agents are generating final report..."
+        )
 
-            "✅ Research Completed Successfully"
 
+        # Actual CrewAI execution
+
+        result = run_research(topic)
+
+
+
+        status.success(
+            "✅ Research completed successfully!"
         )
 
 
@@ -329,44 +306,100 @@ if st.button("🚀 Start AI Research"):
 
 
         st.subheader(
-
             "📄 Final Research Report"
-
         )
 
 
-        st.write(result)
+        st.markdown(
+
+            f"""
+            <div class="report-box">
+
+            {result}
+
+            </div>
+            """,
+
+            unsafe_allow_html=True
+
+        )
 
 
 
     except Exception as e:
 
 
-        st.error(
-
-            "❌ Application Error"
-
-        )
+        error_message = str(e)
 
 
-        st.code(
-
-            str(e)
-
-        )
+        if "RateLimitError" in error_message:
 
 
-        st.info(
+            st.warning(
 
-        """
-        Please check:
+            """
+            ⏳ Groq rate limit reached.
 
-        1. GROQ_API_KEY is added in Streamlit Secrets
+            The AI team generated too many tokens
+            in a short time.
 
-        2. requirements.txt versions
+            Please wait 10 seconds and try again.
+            """
 
-        3. CrewAI imports
+            )
 
-        """
 
-        )
+            time.sleep(10)
+
+
+            try:
+
+                result = run_research(topic)
+
+
+                st.success(
+                    "Research completed after retry."
+                )
+
+
+                st.write(result)
+
+
+            except Exception as retry_error:
+
+
+                st.error(
+                    "Retry failed."
+                )
+
+                st.code(
+                    str(retry_error)
+                )
+
+
+
+        else:
+
+
+            st.error(
+                "❌ Application Error"
+            )
+
+
+            st.code(
+                error_message
+            )
+
+
+            st.info(
+            """
+            Check:
+
+            1. GROQ_API_KEY in Streamlit Secrets
+
+            2. requirements.txt versions
+
+            3. CrewAI configuration
+
+            """
+            )
