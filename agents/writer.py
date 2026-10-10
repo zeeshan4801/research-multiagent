@@ -6,16 +6,14 @@ from config.llm_config import groq_llm
 
 writer_agent = Agent(
 
-    role="Report Writer",
+    role="Professional Report Writer",
 
     goal="""
-    Write a concise professional
-    research report.
+    Create a professional final research report.
     """,
 
     backstory="""
-    You create clear structured
-    business-quality reports.
+    You write clear structured reports.
     """,
 
     llm=groq_llm,
@@ -23,4 +21,5 @@ writer_agent = Agent(
     max_iter=2,
 
     verbose=True
+
 )
