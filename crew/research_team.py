@@ -12,18 +12,24 @@ from tasks.research_tasks import create_tasks
 
 
 
-def run_research(topic):
+def run_research(topic, research_data):
 
 
-    tasks=create_tasks(
+    tasks = create_tasks(
 
         planner_agent,
+
         research_agent,
+
         fact_checker_agent,
+
         analyst_agent,
+
         writer_agent,
 
-        topic
+        topic,
+
+        research_data
 
     )
 
@@ -33,9 +39,13 @@ def run_research(topic):
         agents=[
 
             planner_agent,
+
             research_agent,
+
             fact_checker_agent,
+
             analyst_agent,
+
             writer_agent
 
         ],
@@ -49,7 +59,7 @@ def run_research(topic):
     )
 
 
-    result=crew.kickoff()
+    result = crew.kickoff()
 
 
     return result
