@@ -1,6 +1,7 @@
 from crewai import Task
 
 
+
 def create_tasks(
     planner,
     researcher,
@@ -14,20 +15,15 @@ def create_tasks(
     planning_task = Task(
 
         description=f"""
-        Create a detailed research strategy for:
+        Plan research for:
 
         {topic}
 
-        Identify:
-        - Key research questions
-        - Important areas to investigate
-        - Required sources
+        Create key questions.
         """,
 
         expected_output="""
-        A structured research plan containing
-        research objectives, questions,
-        and information requirements.
+        Short research plan.
         """,
 
         agent=planner
@@ -37,38 +33,32 @@ def create_tasks(
     research_task = Task(
 
         description=f"""
-        Research the following topic:
+        Research:
 
         {topic}
 
-        Collect reliable information,
-        important facts, statistics,
-        and useful sources.
+        Find important facts,
+        statistics and sources.
         """,
 
         expected_output="""
-        A research document containing
-        collected information, sources,
-        and important findings.
+        Research notes with findings
+        and sources.
         """,
 
         agent=researcher
     )
 
 
-    fact_check_task = Task(
+    fact_task = Task(
 
         description="""
-        Review the collected research.
-
-        Verify important claims,
-        identify unreliable information,
-        and improve accuracy.
+        Verify research information.
+        Check accuracy.
         """,
 
         expected_output="""
-        A fact-checking report showing
-        verified information and corrections.
+        Verified research summary.
         """,
 
         agent=fact_checker
@@ -78,19 +68,12 @@ def create_tasks(
     analysis_task = Task(
 
         description="""
-        Analyze the verified research.
-
-        Identify:
-        - Trends
-        - Patterns
-        - Insights
-        - Important conclusions
+        Analyze verified information.
+        Find important insights.
         """,
 
         expected_output="""
-        An analytical summary explaining
-        the meaning and implications
-        of the research findings.
+        Analysis with key insights.
         """,
 
         agent=analyst
@@ -100,16 +83,12 @@ def create_tasks(
     writing_task = Task(
 
         description="""
-        Create a professional final research report.
-
-        Organize the information clearly
-        with headings, explanations,
-        and recommendations.
+        Write final professional report.
+        Keep it structured and concise.
         """,
 
         expected_output="""
-        A complete professional research report
-        suitable for presentation to users.
+        Complete research report.
         """,
 
         agent=writer
@@ -120,7 +99,7 @@ def create_tasks(
 
         planning_task,
         research_task,
-        fact_check_task,
+        fact_task,
         analysis_task,
         writing_task
 
