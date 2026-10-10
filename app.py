@@ -11,7 +11,7 @@ import streamlit as st
 import time
 
 
-from tools.search_tool import web_search
+from tools.search_tool import search_web
 
 from crew.research_team import run_research
 
@@ -19,7 +19,7 @@ from crew.research_team import run_research
 
 st.set_page_config(
 
-    page_title="AI Research Team",
+    page_title="AI Research Multi Agent",
 
     page_icon="🧠",
 
@@ -33,13 +33,25 @@ st.title("🧠 AI Research Multi Agent Team")
 
 
 st.write(
-"Research Planner + Web Research + Analysis + Report Writing"
+"""
+Autonomous research system powered by:
+
+- CrewAI
+- Groq
+- Streamlit
+- Web Research
+"""
 )
 
 
 
 topic = st.text_area(
-    "Enter research topic"
+
+    "Enter research topic",
+
+    placeholder=
+    "Example: Future of Artificial Intelligence from 2025 to 2030"
+
 )
 
 
@@ -47,7 +59,7 @@ topic = st.text_area(
 if st.button("🚀 Start Research"):
 
 
-    if not topic:
+    if not topic.strip():
 
         st.warning(
             "Please enter a topic"
@@ -57,63 +69,88 @@ if st.button("🚀 Start Research"):
 
 
 
-    with st.spinner(
-        "🔎 Collecting web research..."
-    ):
-
-        research_data = web_search(topic)
-
-
-
-    agents = [
-
-        "📋 Planner",
-
-        "🔎 Research Analyst",
-
-        "✅ Fact Checker",
-
-        "📊 Analyst",
-
-        "✍️ Writer"
-
-    ]
-
-
-    progress = st.progress(0)
-
     status = st.empty()
 
-
-
-    for i,a in enumerate(agents):
-
-        status.info(
-            f"Working: {a}"
-        )
-
-        progress.progress(
-            int((i+1)/len(agents)*100)
-        )
-
-        time.sleep(0.5)
+    progress = st.progress(0)
 
 
 
     try:
 
+
+        # Step 1: Web research
+
+        status.info(
+            "🔎 Collecting web research..."
+        )
+
+
+        research_data = search_web(topic)
+
+
+        progress.progress(25)
+
+
+
+        # Step 2: CrewAI agents
+
+        agents = [
+
+            "📋 Research Planner",
+
+            "🔎 Research Analyst",
+
+            "✅ Fact Checker",
+
+            "📊 Data Analyst",
+
+            "✍️ Report Writer"
+
+        ]
+
+
+
+        for index, agent in enumerate(agents):
+
+            status.info(
+                f"⚙️ Working: {agent}"
+            )
+
+
+            progress.progress(
+                25 + int((index+1)/len(agents)*75)
+            )
+
+
+            time.sleep(0.5)
+
+
+
         with st.spinner(
             "Generating final report..."
         ):
 
+
             result = run_research(
+
                 topic,
+
                 research_data
+
             )
 
 
+
         st.success(
-            "Research completed!"
+            "✅ Research completed"
+        )
+
+
+        st.divider()
+
+
+        st.subheader(
+            "📄 Final Report"
         )
 
 
@@ -125,8 +162,9 @@ if st.button("🚀 Start Research"):
 
 
         st.error(
-            "Application Error"
+            "❌ Application Error"
         )
+
 
         st.code(
             str(e)
