@@ -1,50 +1,96 @@
-from duckduckgo_search import DDGS
+import requests
+
+from bs4 import BeautifulSoup
+
+from urllib.parse import quote
+
 from crewai.tools import tool
 
 
 
 def search_web(query: str) -> str:
     """
-    Normal web search function.
+    Simple web search using DuckDuckGo HTML.
+    No external search package required.
     """
-
-    results = []
-
 
     try:
 
-        with DDGS() as ddgs:
+        url = (
+            "https://html.duckduckgo.com/html/?q="
+            + quote(query)
+        )
 
-            data = ddgs.text(
 
-                query,
+        headers = {
 
-                max_results=5
+            "User-Agent":
+            "Mozilla/5.0"
 
+        }
+
+
+        response = requests.get(
+
+            url,
+
+            headers=headers,
+
+            timeout=10
+
+        )
+
+
+        soup = BeautifulSoup(
+
+            response.text,
+
+            "html.parser"
+
+        )
+
+
+        results=[]
+
+
+        for result in soup.select(".result")[:5]:
+
+
+            title = result.select_one(
+                ".result__title"
             )
 
 
-            for item in data:
+            snippet = result.select_one(
+                ".result__snippet"
+            )
 
-                results.append(
 
-                    f"""
+            link = result.select_one(
+                ".result__a"
+            )
+
+
+            results.append(
+
+                f"""
 Title:
-{item.get('title')}
+{title.text if title else ''}
 
 Summary:
-{item.get('body')}
+{snippet.text if snippet else ''}
 
-Source:
-{item.get('href')}
+Link:
+{link.get('href') if link else ''}
 """
+            )
 
-                )
 
 
         if not results:
 
-            return "No search results found."
+            return "No web results found."
+
 
 
         return "\n\n".join(results)
@@ -53,17 +99,16 @@ Source:
 
     except Exception as e:
 
-        return f"Search error: {str(e)}"
-
+        return f"Search failed: {str(e)}"
 
 
 
 
 @tool("web_search")
-def web_search(query: str) -> str:
+def web_search(query:str)->str:
 
     """
-    CrewAI web search tool.
+    CrewAI compatible search tool.
     """
 
     return search_web(query)
