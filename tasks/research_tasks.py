@@ -3,15 +3,10 @@ from crewai import Task
 
 
 def create_tasks(
-
     researcher,
-
     writer,
-
     topic,
-
     research_data
-
 ):
 
 
@@ -19,26 +14,32 @@ def create_tasks(
 
         description=f"""
 
-Analyze:
+Analyze this research topic:
 
 {topic}
 
 
-Research notes:
+Collected research:
 
 {research_data}
 
 
-Extract only:
+Extract:
 
-- 5 important facts
-- 3 insights
+- Important facts
+- Key statistics
+- Main insights
+- Source references
+
+
+Keep the analysis concise.
 
 """,
 
         expected_output="""
 
-Short research summary.
+A structured research summary with
+important facts and source references.
 
 """,
 
@@ -52,24 +53,32 @@ Short research summary.
 
         description="""
 
-Create a concise professional report.
+Create a professional research report.
 
-Maximum:
+Structure:
 
-600 words.
+1. Executive Summary
 
-Include:
+2. Key Findings
 
-- Introduction
-- Key Findings
-- Conclusion
-- Recommendations
+3. Analysis
+
+4. Recommendations
+
+5. Sources
+
+
+Mention sources where relevant.
+
+
+Keep the report under 700 words.
 
 """,
 
         expected_output="""
 
-Professional short report.
+A professional research report
+with citations and recommendations.
 
 """,
 
