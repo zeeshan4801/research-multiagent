@@ -1,44 +1,39 @@
 from crewai.tools import tool
-
 from duckduckgo_search import DDGS
 
 
 
 @tool("web_search")
 def web_search(query: str) -> str:
-
     """
-    Search the internet for research information.
+    Search web and return useful research information.
     """
 
-    results=[]
+    results = []
 
 
     with DDGS() as ddgs:
 
-        search_results = ddgs.text(
-
+        data = ddgs.text(
             query,
-
-            max_results=3
-
+            max_results=5
         )
 
 
-        for item in search_results:
+        for item in data:
 
             results.append(
 
                 f"""
-                Title:
-                {item.get('title')}
+Title:
+{item.get('title')}
 
-                Content:
-                {item.get('body')}
+Summary:
+{item.get('body')}
 
-                URL:
-                {item.get('href')}
-                """
+Link:
+{item.get('href')}
+"""
 
             )
 
