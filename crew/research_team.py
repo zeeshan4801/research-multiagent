@@ -15,37 +15,27 @@ from tasks.research_tasks import create_tasks
 def run_research(topic, research_data):
 
 
-    tasks = create_tasks(
+    tasks=create_tasks(
 
         planner_agent,
-
         research_agent,
-
         fact_checker_agent,
-
         analyst_agent,
-
         writer_agent,
-
         topic,
-
         research_data
 
     )
 
 
-    crew = Crew(
+    crew=Crew(
 
         agents=[
 
             planner_agent,
-
             research_agent,
-
             fact_checker_agent,
-
             analyst_agent,
-
             writer_agent
 
         ],
@@ -54,12 +44,11 @@ def run_research(topic, research_data):
 
         process=Process.sequential,
 
-        verbose=True
+        verbose=True,
+
+        memory=False
 
     )
 
 
-    result = crew.kickoff()
-
-
-    return result
+    return crew.kickoff()
