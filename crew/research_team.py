@@ -2,6 +2,7 @@ from crewai import Crew, Process
 
 
 from agents.researcher import research_agent
+
 from agents.writer import writer_agent
 
 
@@ -10,6 +11,11 @@ from tasks.research_tasks import create_tasks
 
 
 def run_research(topic, research_data):
+
+
+    # Limit input size
+
+    research_data = research_data[:2500]
 
 
     tasks = create_tasks(
@@ -39,14 +45,11 @@ def run_research(topic, research_data):
 
         process=Process.sequential,
 
-        verbose=True,
+        verbose=False,
 
         memory=False
 
     )
 
 
-    result = crew.kickoff()
-
-
-    return result
+    return crew.kickoff()
