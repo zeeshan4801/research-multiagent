@@ -9,18 +9,21 @@ research_agent = Agent(
     role="Research Analyst",
 
     goal="""
-    Analyze collected research information.
-    Create structured research notes.
-    """,
+
+Analyze collected research data
+and extract useful information.
+
+""",
 
     backstory="""
-    You are a professional research analyst.
-    You convert information into useful findings.
-    """,
+
+You are a professional research analyst.
+
+""",
 
     llm=groq_llm,
 
-    max_iter=2,
+    max_iter=1,
 
     verbose=True
 
