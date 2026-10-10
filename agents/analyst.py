@@ -9,13 +9,12 @@ analyst_agent = Agent(
     role="Research Analyst",
 
     goal="""
-    Analyze verified information
-    and create useful insights.
+    Extract insights, trends and conclusions
+    from verified information.
     """,
 
     backstory="""
-    You convert research data
-    into meaningful conclusions.
+    You specialize in analyzing research data.
     """,
 
     llm=groq_llm,
@@ -23,4 +22,5 @@ analyst_agent = Agent(
     max_iter=2,
 
     verbose=True
+
 )
