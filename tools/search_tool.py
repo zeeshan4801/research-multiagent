@@ -1,12 +1,12 @@
-from crewai.tools import tool
 from duckduckgo_search import DDGS
+from crewai.tools import tool
 
 
 
-@tool("web_search")
-def web_search(query: str) -> str:
+def search_web(query: str) -> str:
     """
-    Search web and return useful research information.
+    Normal Python web search function.
+    Used by Streamlit.
     """
 
     results = []
@@ -23,7 +23,6 @@ def web_search(query: str) -> str:
         for item in data:
 
             results.append(
-
                 f"""
 Title:
 {item.get('title')}
@@ -31,11 +30,20 @@ Title:
 Summary:
 {item.get('body')}
 
-Link:
+URL:
 {item.get('href')}
 """
-
             )
 
 
     return "\n\n".join(results)
+
+
+
+@tool("web_search")
+def web_search(query: str) -> str:
+    """
+    CrewAI compatible web search tool.
+    """
+
+    return search_web(query)
