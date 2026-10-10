@@ -1,10 +1,12 @@
 import os
 
 from dotenv import load_dotenv
+
 from crewai import LLM
 
 
 load_dotenv()
+
 
 
 groq_llm = LLM(
@@ -15,6 +17,6 @@ groq_llm = LLM(
 
     temperature=0.1,
 
-    max_tokens=700
+    max_tokens=800
 
 )
