@@ -16,92 +16,77 @@ def create_tasks(
     planning_task = Task(
 
         description=f"""
-Create a research plan for:
+Create a short research plan for:
 
 {topic}
-
-Research areas:
-- Key questions
-- Important facts
-- Required analysis
 """,
 
         expected_output="""
-A structured research plan.
+5 bullet point research plan.
 """,
 
         agent=planner
-
     )
 
 
     research_task = Task(
 
         description=f"""
-Analyze this collected research:
+Summarize this research data:
 
 {research_data}
 
-Organize:
-- Facts
-- Statistics
-- Important points
+Extract only important facts.
 """,
 
         expected_output="""
-Structured research notes.
+Short research summary.
 """,
 
         agent=researcher
-
     )
 
 
     fact_task = Task(
 
         description="""
-Verify the research notes.
-Identify unreliable information.
+Check the research summary.
+Find possible incorrect claims.
 """,
 
         expected_output="""
-Verified research summary.
+Short verification notes.
 """,
 
         agent=fact_checker
-
     )
 
 
     analysis_task = Task(
 
         description="""
-Analyze verified information.
-Create insights and conclusions.
+Extract the main insights.
 """,
 
         expected_output="""
-Research analysis report.
+5 important insights.
 """,
 
         agent=analyst
-
     )
 
 
     writing_task = Task(
 
         description="""
-Write the final professional report.
-Use headings and recommendations.
+Write a concise final report.
 """,
 
         expected_output="""
-Complete research report.
+A short professional report.
 """,
 
         agent=writer
-
     )
 
 
