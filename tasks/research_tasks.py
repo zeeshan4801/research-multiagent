@@ -8,90 +8,100 @@ def create_tasks(
     fact_checker,
     analyst,
     writer,
-    topic
+    topic,
+    research_data
 ):
 
 
     planning_task = Task(
 
         description=f"""
-        Plan research for:
+Create a research plan for:
 
-        {topic}
+{topic}
 
-        Create key questions.
-        """,
+Research areas:
+- Key questions
+- Important facts
+- Required analysis
+""",
 
         expected_output="""
-        Short research plan.
-        """,
+A structured research plan.
+""",
 
         agent=planner
+
     )
 
 
     research_task = Task(
 
         description=f"""
-        Research:
+Analyze this collected research:
 
-        {topic}
+{research_data}
 
-        Find important facts,
-        statistics and sources.
-        """,
+Organize:
+- Facts
+- Statistics
+- Important points
+""",
 
         expected_output="""
-        Research notes with findings
-        and sources.
-        """,
+Structured research notes.
+""",
 
         agent=researcher
+
     )
 
 
     fact_task = Task(
 
         description="""
-        Verify research information.
-        Check accuracy.
-        """,
+Verify the research notes.
+Identify unreliable information.
+""",
 
         expected_output="""
-        Verified research summary.
-        """,
+Verified research summary.
+""",
 
         agent=fact_checker
+
     )
 
 
     analysis_task = Task(
 
         description="""
-        Analyze verified information.
-        Find important insights.
-        """,
+Analyze verified information.
+Create insights and conclusions.
+""",
 
         expected_output="""
-        Analysis with key insights.
-        """,
+Research analysis report.
+""",
 
         agent=analyst
+
     )
 
 
     writing_task = Task(
 
         description="""
-        Write final professional report.
-        Keep it structured and concise.
-        """,
+Write the final professional report.
+Use headings and recommendations.
+""",
 
         expected_output="""
-        Complete research report.
-        """,
+Complete research report.
+""",
 
         agent=writer
+
     )
 
 
