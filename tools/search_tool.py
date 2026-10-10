@@ -5,45 +5,65 @@ from crewai.tools import tool
 
 def search_web(query: str) -> str:
     """
-    Normal Python web search function.
-    Used by Streamlit.
+    Normal web search function.
     """
 
     results = []
 
 
-    with DDGS() as ddgs:
+    try:
 
-        data = ddgs.text(
-            query,
-            max_results=5
-        )
+        with DDGS() as ddgs:
+
+            data = ddgs.text(
+
+                query,
+
+                max_results=5
+
+            )
 
 
-        for item in data:
+            for item in data:
 
-            results.append(
-                f"""
+                results.append(
+
+                    f"""
 Title:
 {item.get('title')}
 
 Summary:
 {item.get('body')}
 
-URL:
+Source:
 {item.get('href')}
 """
-            )
+
+                )
 
 
-    return "\n\n".join(results)
+        if not results:
+
+            return "No search results found."
+
+
+        return "\n\n".join(results)
+
+
+
+    except Exception as e:
+
+        return f"Search error: {str(e)}"
+
+
 
 
 
 @tool("web_search")
 def web_search(query: str) -> str:
+
     """
-    CrewAI compatible web search tool.
+    CrewAI web search tool.
     """
 
     return search_web(query)
