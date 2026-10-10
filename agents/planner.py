@@ -1,23 +1,25 @@
 from crewai import Agent
+
 from config.llm_config import groq_llm
 
 
+planner_agent = Agent(
 
-planner_agent=Agent(
+    role="Research Planner",
 
-role="Research Planner",
+    goal="""
+    Create a simple research strategy.
+    Identify important questions and areas.
+    """,
 
-goal="""
-Create a detailed research plan.
-Identify questions that need answers.
-""",
+    backstory="""
+    You are an efficient research planner.
+    You create clear research directions.
+    """,
 
-backstory="""
-Expert academic research planner.
-""",
+    llm=groq_llm,
 
-llm=groq_llm,
+    max_iter=2,
 
-verbose=True
-
+    verbose=True
 )
