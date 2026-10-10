@@ -1,8 +1,8 @@
-streamlit
-crewai
-crewai-tools
-groq
-python-dotenv
-duckduckgo-search
-beautifulsoup4
-requests
+streamlit==1.39.0
+crewai==0.86.0
+crewai-tools==0.17.0
+groq==0.11.0
+python-dotenv==1.0.1
+duckduckgo-search==6.3.7
+beautifulsoup4==4.12.3
+requests==2.32.3
