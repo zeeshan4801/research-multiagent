@@ -9,13 +9,12 @@ fact_checker_agent = Agent(
     role="Fact Checker",
 
     goal="""
-    Verify important information
-    and remove unreliable claims.
+    Verify research information and identify
+    unreliable statements.
     """,
 
     backstory="""
-    You specialize in checking
-    research accuracy.
+    You are a professional fact verification expert.
     """,
 
     llm=groq_llm,
@@ -23,4 +22,5 @@ fact_checker_agent = Agent(
     max_iter=2,
 
     verbose=True
+
 )
