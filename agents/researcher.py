@@ -2,35 +2,26 @@ from crewai import Agent
 
 from config.llm_config import groq_llm
 
-from tools.search_tool import web_search
-from tools.webpage_tool import read_webpage
-
 
 
 research_agent = Agent(
 
-    role="Research Collector",
+    role="Research Analyst",
 
     goal="""
-    Collect reliable information from the internet.
-    Use search tools when needed.
+    Analyze collected research information.
+    Create structured research notes.
     """,
 
     backstory="""
-    You are an expert online researcher.
-    You gather facts, statistics and sources.
+    You are a professional research analyst.
+    You convert information into useful findings.
     """,
-
-    tools=[
-        web_search,
-        read_webpage
-    ],
 
     llm=groq_llm,
 
     max_iter=2,
 
-    verbose=True,
+    verbose=True
 
-    allow_delegation=False
 )
