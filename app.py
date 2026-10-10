@@ -3,10 +3,6 @@ import sys
 import time
 
 
-# ---------------------------------
-# Streamlit Cloud import fix
-# ---------------------------------
-
 sys.path.append(
     os.path.dirname(
         os.path.abspath(__file__)
@@ -28,10 +24,6 @@ from utils.source_parser import extract_sources
 
 
 
-# ---------------------------------
-# Page Configuration
-# ---------------------------------
-
 st.set_page_config(
 
     page_title="AI Research Assistant",
@@ -44,15 +36,12 @@ st.set_page_config(
 
 
 
-# ---------------------------------
-# Custom CSS
-# ---------------------------------
-
 st.markdown(
+
 """
 <style>
 
-.title {
+.main-title{
 
 font-size:45px;
 font-weight:800;
@@ -62,31 +51,12 @@ color:#0ea5e9;
 }
 
 
-.subtitle {
+.card{
 
-text-align:center;
-font-size:18px;
-color:#64748b;
-
-}
-
-
-.agent-card {
-
-padding:15px;
-border-radius:12px;
-background:#f1f5f9;
-margin:10px 0;
-font-size:17px;
-
-}
-
-
-.report-card {
-
-padding:20px;
+padding:18px;
 border-radius:15px;
-background:#ffffff;
+background:#f8fafc;
+margin-bottom:15px;
 
 }
 
@@ -101,22 +71,12 @@ unsafe_allow_html=True
 
 
 
-# ---------------------------------
-# Header
-# ---------------------------------
-
 st.markdown(
 
 """
-<div class="title">
+<div class="main-title">
 
-🧠 AI Research Multi-Agent Assistant
-
-</div>
-
-<div class="subtitle">
-
-Web Research • AI Analysis • Professional Reports
+🧠 AI Research Assistant
 
 </div>
 
@@ -128,82 +88,37 @@ unsafe_allow_html=True
 
 
 
-st.divider()
+st.caption(
 
-
-
-# ---------------------------------
-# Sidebar
-# ---------------------------------
-
-with st.sidebar:
-
-
-    st.header("🤖 AI Team")
-
-
-    st.markdown(
-    """
-    🔎 Web Research Layer
-
-    🧠 Research Analyst
-
-    ✍️ Report Writer
-
-    📄 PDF Generator
-
-    """
-    )
-
-
-    st.divider()
-
-
-    st.info(
-
-        "Powered by CrewAI + Groq + Tavily"
-
-    )
-
-
-
-# ---------------------------------
-# User Input
-# ---------------------------------
-
-topic = st.text_area(
-
-    "🔍 Enter your research topic",
-
-    placeholder=
-
-    """
-Example:
-
-Analyze solar energy opportunities
-in California.
-
-""",
-
-    height=120
+"Web Research • AI Analysis • Professional Reports"
 
 )
 
 
 
-# ---------------------------------
-# Main Execution
-# ---------------------------------
+st.divider()
+
+
+
+topic = st.text_area(
+
+"🔍 Research Topic",
+
+height=100
+
+)
+
+
 
 if st.button(
-    "🚀 Generate Research Report"
+"🚀 Generate Report"
 ):
 
 
-    if not topic.strip():
+    if not topic:
 
         st.warning(
-            "Please enter a research topic."
+            "Enter a topic first"
         )
 
         st.stop()
@@ -212,324 +127,186 @@ if st.button(
 
     status = st.empty()
 
-
     progress = st.progress(0)
 
 
 
-    try:
+    status.info(
+        "🔎 Searching sources..."
+    )
 
 
-        # -------------------------
-        # Step 1 Search
-        # -------------------------
+    research_data = search_web(topic)
 
-        status.markdown(
 
-        """
-        <div class="agent-card">
+    progress.progress(35)
 
-        🔎 Searching trusted sources...
 
-        </div>
 
-        """,
+    status.info(
+        "🧠 AI Research Analyst working..."
+    )
 
-        unsafe_allow_html=True
+
+    result = run_research(
+
+        topic,
+
+        research_data
+
+    )
+
+
+    progress.progress(80)
+
+
+
+    status.info(
+        "✍️ Preparing final report..."
+    )
+
+
+    time.sleep(1)
+
+
+    progress.progress(100)
+
+
+    status.success(
+        "✅ Completed"
+    )
+
+
+
+    report = (
+
+        result.raw
+
+        if hasattr(result,"raw")
+
+        else str(result)
+
+    )
+
+
+    sources = extract_sources(
+
+        research_data
+
+    )
+
+
+
+    st.divider()
+
+
+
+    col1,col2,col3 = st.columns(3)
+
+
+    with col1:
+
+        st.metric(
+
+            "Sources",
+
+            len(sources)
 
         )
 
 
-        research_data = search_web(topic)
+    with col2:
+
+        st.metric(
+
+            "AI Agents",
+
+            "2"
+
+        )
 
 
-        progress.progress(30)
+    with col3:
 
+        st.metric(
 
+            "Model",
 
-        # -------------------------
-        # Step 2 CrewAI
-        # -------------------------
-
-
-        status.markdown(
-
-        """
-        <div class="agent-card">
-
-        🧠 Research Analyst working...
-
-        </div>
-
-        """,
-
-        unsafe_allow_html=True
+            "GPT-OSS-20B"
 
         )
 
 
 
-        time.sleep(1)
+    tab1,tab2,tab3 = st.tabs(
+
+        [
+
+        "📄 Report",
+
+        "🔗 Sources",
+
+        "⬇ Download"
+
+        ]
+
+    )
 
 
 
-        status.markdown(
+    with tab1:
 
-        """
-        <div class="agent-card">
-
-        ✍️ Report Writer working...
-
-        </div>
-
-        """,
-
-        unsafe_allow_html=True
-
-        )
+        st.markdown(report)
 
 
 
-        progress.progress(70)
+    with tab2:
 
 
+        if sources:
 
-        # -------------------------
-        # Run CrewAI with retry
-        # -------------------------
+            for s in sources:
 
-
-        try:
-
-
-            result = run_research(
-
-                topic,
-
-                research_data
-
-            )
-
-
-        except Exception as e:
-
-
-            if "RateLimitError" in str(e):
-
-
-                status.warning(
-
-                """
-                ⏳ Groq rate limit reached.
-                Waiting 15 seconds...
-
-                """
-
+                st.write(
+                    "🔗",
+                    s
                 )
 
+        else:
 
-                time.sleep(15)
-
-
-
-                result = run_research(
-
-                    topic,
-
-                    research_data
-
-                )
-
-
-            else:
-
-                raise e
+            st.info(
+                "No sources found"
+            )
 
 
 
-        progress.progress(100)
+    with tab3:
 
 
+        pdf = create_pdf(report)
 
-        status.success(
 
-            "✅ Research completed successfully"
+        st.download_button(
+
+            "📄 Download PDF",
+
+            pdf,
+
+            "research_report.pdf",
+
+            "application/pdf"
 
         )
 
 
+        st.download_button(
 
-        st.divider()
+            "📝 Download Markdown",
 
+            report,
 
+            "research_report.md",
 
-        # -------------------------
-        # Tabs
-        # -------------------------
-
-        report_tab, source_tab, pdf_tab = st.tabs(
-
-            [
-
-                "📄 Report",
-
-                "🔗 Sources",
-
-                "⬇ Download"
-
-            ]
-
-        )
-
-
-
-        # -------------------------
-        # Report
-        # -------------------------
-
-        with report_tab:
-
-
-            st.markdown(
-
-            """
-            <div class="report-card">
-
-            """,
-
-            unsafe_allow_html=True
-
-            )
-
-
-            if hasattr(result, "raw"):
-
-                st.markdown(
-                    result.raw
-                )
-
-            else:
-
-                st.markdown(
-                    str(result)
-                )
-
-
-
-            st.markdown(
-
-            "</div>",
-
-            unsafe_allow_html=True
-
-            )
-
-
-
-        # -------------------------
-        # Sources
-        # -------------------------
-
-        with source_tab:
-
-
-            sources = extract_sources(
-
-                research_data
-
-            )
-
-
-            if sources:
-
-
-                for source in sources:
-
-                    st.write(
-                        "🔗",
-                        source
-                    )
-
-
-            else:
-
-                st.info(
-                    "No sources found."
-                )
-
-
-
-        # -------------------------
-        # PDF
-        # -------------------------
-
-        with pdf_tab:
-
-
-            report_text = (
-
-                result.raw
-
-                if hasattr(result, "raw")
-
-                else str(result)
-
-            )
-
-
-            pdf_file = create_pdf(
-
-                report_text
-
-            )
-
-
-            st.download_button(
-
-                label="📄 Download PDF Report",
-
-                data=pdf_file,
-
-                file_name=
-                "AI_Research_Report.pdf",
-
-                mime=
-                "application/pdf"
-
-            )
-
-
-
-    except Exception as e:
-
-
-        st.error(
-
-            "❌ Application Error"
-
-        )
-
-
-        st.code(
-
-            str(e)
-
-        )
-
-
-        st.info(
-
-        """
-        Check:
-
-        1. GROQ_API_KEY in Streamlit Secrets
-
-        2. TAVILY_API_KEY in Streamlit Secrets
-
-        3. Groq rate limits
-
-        4. CrewAI configuration
-
-        """
+            "text/markdown"
 
         )
