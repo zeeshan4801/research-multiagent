@@ -12,25 +12,25 @@ research_agent = Agent(
     role="Research Collector",
 
     goal="""
-    Collect reliable information
-    using available research tools.
+    Collect reliable information from the internet.
+    Use search tools when needed.
     """,
 
     backstory="""
-    You are an online research specialist.
-    Find useful facts and sources.
+    You are an expert online researcher.
+    You gather facts, statistics and sources.
     """,
 
     tools=[
-
         web_search,
         read_webpage
-
     ],
 
     llm=groq_llm,
 
-    max_iter=3,
+    max_iter=2,
 
-    verbose=True
+    verbose=True,
+
+    allow_delegation=False
 )
