@@ -3,99 +3,81 @@ from crewai import Task
 
 
 def create_tasks(
-    planner,
     researcher,
-    fact_checker,
-    analyst,
     writer,
     topic,
     research_data
 ):
 
 
-    planning_task = Task(
-
-        description=f"""
-Create a short research plan for:
-
-{topic}
-""",
-
-        expected_output="""
-5 bullet point research plan.
-""",
-
-        agent=planner
-    )
-
-
     research_task = Task(
 
         description=f"""
-Summarize this research data:
+
+Analyze this topic:
+
+{topic}
+
+
+Use this collected information:
 
 {research_data}
 
-Extract only important facts.
+
+Extract:
+
+- Important facts
+- Key points
+- Useful insights
+
+Keep it concise.
+
 """,
 
         expected_output="""
-Short research summary.
+
+A concise research summary.
+
 """,
 
         agent=researcher
-    )
 
-
-    fact_task = Task(
-
-        description="""
-Check the research summary.
-Find possible incorrect claims.
-""",
-
-        expected_output="""
-Short verification notes.
-""",
-
-        agent=fact_checker
-    )
-
-
-    analysis_task = Task(
-
-        description="""
-Extract the main insights.
-""",
-
-        expected_output="""
-5 important insights.
-""",
-
-        agent=analyst
     )
 
 
     writing_task = Task(
 
         description="""
-Write a concise final report.
+
+Create a professional final report
+from the research summary.
+
+Include:
+
+- Introduction
+- Main points
+- Conclusion
+- Recommendations
+
+Keep it concise.
+
 """,
 
         expected_output="""
-A short professional report.
+
+A professional research report.
+
 """,
 
         agent=writer
+
     )
 
 
     return [
 
-        planning_task,
         research_task,
-        fact_task,
-        analysis_task,
+
         writing_task
 
     ]
