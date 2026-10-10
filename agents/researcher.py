@@ -7,27 +7,30 @@ from tools.webpage_tool import read_webpage
 
 
 
-research_agent=Agent(
+research_agent = Agent(
 
-role="Internet Research Specialist",
+    role="Research Collector",
 
-goal="""
-Find reliable information using research tools.
-Collect important facts and sources.
-""",
+    goal="""
+    Collect reliable information
+    using available research tools.
+    """,
 
-backstory="""
-Professional online researcher skilled in
-finding trustworthy information.
-""",
+    backstory="""
+    You are an online research specialist.
+    Find useful facts and sources.
+    """,
 
-tools=[
-    web_search,
-    read_webpage
-],
+    tools=[
 
-llm=groq_llm,
+        web_search,
+        read_webpage
 
-verbose=True
+    ],
 
+    llm=groq_llm,
+
+    max_iter=3,
+
+    verbose=True
 )
