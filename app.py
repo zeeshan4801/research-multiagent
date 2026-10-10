@@ -3,12 +3,13 @@ import sys
 
 
 sys.path.append(
-    os.path.dirname(os.path.abspath(__file__))
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
 )
 
 
 import streamlit as st
-import time
 
 
 from tools.search_tool import search_web
@@ -16,10 +17,15 @@ from tools.search_tool import search_web
 from crew.research_team import run_research
 
 
+from utils.pdf_generator import create_pdf
+
+from utils.source_parser import extract_sources
+
+
 
 st.set_page_config(
 
-    page_title="AI Research Multi Agent",
+    page_title="AI Research Assistant",
 
     page_icon="🧠",
 
@@ -29,37 +35,100 @@ st.set_page_config(
 
 
 
-st.title("🧠 AI Research Multi Agent Team")
+# ---------- CSS ----------
 
 
-st.write(
+st.markdown(
 """
-Autonomous research system powered by:
+<style>
 
-- CrewAI
-- Groq
-- Streamlit
-- Web Research
-"""
+.title {
+
+font-size:45px;
+font-weight:800;
+text-align:center;
+
+}
+
+
+.subtitle {
+
+text-align:center;
+color:#64748b;
+
+}
+
+
+.card {
+
+padding:20px;
+
+border-radius:15px;
+
+background:#f8fafc;
+
+margin:10px;
+
+}
+
+
+</style>
+""",
+
+unsafe_allow_html=True
 )
+
+
+
+# ---------- Header ----------
+
+
+st.markdown(
+
+"""
+<div class="title">
+
+🧠 AI Research Assistant
+
+</div>
+
+<div class="subtitle">
+
+Autonomous Research • Analysis • Professional Reports
+
+</div>
+
+""",
+
+unsafe_allow_html=True
+
+)
+
+
+
+st.divider()
 
 
 
 topic = st.text_area(
 
-    "Enter research topic",
+    "🔍 Enter Research Topic",
 
     placeholder=
-    "Example: Future of Artificial Intelligence from 2025 to 2030"
+    "Example: Future of solar energy market in USA",
+
+    height=120
 
 )
 
 
 
-if st.button("🚀 Start Research"):
+if st.button(
+    "🚀 Generate Research Report"
+):
 
 
-    if not topic.strip():
+    if not topic:
 
         st.warning(
             "Please enter a topic"
@@ -69,103 +138,156 @@ if st.button("🚀 Start Research"):
 
 
 
-    status = st.empty()
-
     progress = st.progress(0)
 
 
-
-    try:
-
-
-        # Step 1: Web research
-
-        status.info(
-            "🔎 Collecting web research..."
-        )
-
-
-        research_data = search_web(topic)
-
-
-        progress.progress(25)
+    status = st.empty()
 
 
 
-        # Step 2: CrewAI agents
+    # Search
 
-        agents = [
 
-            "📋 Research Planner",
+    status.info(
+        "🔎 Searching trusted sources..."
+    )
 
-            "🔎 Research Analyst",
 
-            "✅ Fact Checker",
+    research_data = search_web(topic)
 
-            "📊 Data Analyst",
 
-            "✍️ Report Writer"
+    progress.progress(30)
 
+
+
+    # Agents
+
+
+    status.info(
+        "🧠 Research Analyst working..."
+    )
+
+
+    result = run_research(
+
+        topic,
+
+        research_data
+
+    )
+
+
+    progress.progress(80)
+
+
+
+    status.info(
+        "✍️ Preparing final report..."
+    )
+
+
+    progress.progress(100)
+
+
+
+    st.success(
+        "Research completed successfully!"
+    )
+
+
+
+    tabs = st.tabs(
+
+        [
+            "📄 Report",
+            "🔗 Sources",
+            "⬇ Download"
         ]
 
-
-
-        for index, agent in enumerate(agents):
-
-            status.info(
-                f"⚙️ Working: {agent}"
-            )
-
-
-            progress.progress(
-                25 + int((index+1)/len(agents)*75)
-            )
-
-
-            time.sleep(0.5)
+    )
 
 
 
-        with st.spinner(
-            "Generating final report..."
-        ):
+    # Report Tab
 
 
-            result = run_research(
-
-                topic,
-
-                research_data
-
-            )
+    with tabs[0]:
 
 
+        st.markdown(
 
-        st.success(
-            "✅ Research completed"
+            result.raw
+
+            if hasattr(result,"raw")
+
+            else str(result)
+
         )
 
 
-        st.divider()
+
+    # Sources Tab
 
 
-        st.subheader(
-            "📄 Final Report"
+    with tabs[1]:
+
+
+        sources = extract_sources(
+
+            str(research_data)
+
         )
 
 
-        st.write(result)
+        if sources:
+
+
+            for s in sources:
+
+                st.write(
+                    "🔗 ",
+                    s
+                )
+
+
+        else:
+
+            st.info(
+                "No sources detected"
+            )
 
 
 
-    except Exception as e:
+    # Download Tab
 
 
-        st.error(
-            "❌ Application Error"
+    with tabs[2]:
+
+
+        report_text = (
+
+            result.raw
+
+            if hasattr(result,"raw")
+
+            else str(result)
+
         )
 
 
-        st.code(
-            str(e)
+        pdf = create_pdf(
+            report_text
+        )
+
+
+        st.download_button(
+
+            label="📄 Download PDF Report",
+
+            data=pdf,
+
+            file_name="AI_Research_Report.pdf",
+
+            mime="application/pdf"
+
         )
