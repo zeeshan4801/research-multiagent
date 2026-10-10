@@ -3,22 +3,24 @@ from crewai import Agent
 from config.llm_config import groq_llm
 
 
+
 writer_agent = Agent(
 
-    role="Professional Research Writer",
+    role="Report Writer",
 
     goal="""
-    Create a clear professional final report
-    from research findings.
+    Write a concise professional
+    research report.
     """,
 
     backstory="""
-    You are an expert technical writer.
-    You create structured reports
-    understandable by everyone.
+    You create clear structured
+    business-quality reports.
     """,
 
     llm=groq_llm,
+
+    max_iter=2,
 
     verbose=True
 )
