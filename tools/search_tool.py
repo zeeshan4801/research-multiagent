@@ -6,10 +6,6 @@ from tavily import TavilyClient
 
 def search_web(query):
 
-    """
-    AI optimized web search
-    """
-
     client = TavilyClient(
 
         api_key=os.getenv(
@@ -23,9 +19,9 @@ def search_web(query):
 
         query=query,
 
-        search_depth="advanced",
+        search_depth="basic",
 
-        max_results=5
+        max_results=3
 
     )
 
@@ -33,20 +29,20 @@ def search_web(query):
     results=[]
 
 
-    for item in response["results"]:
+    for item in response.get("results", []):
 
 
         results.append(
 
             f"""
 Title:
-{item['title']}
+{item.get('title')}
 
 Content:
-{item['content']}
+{item.get('content','')[:700]}
 
 URL:
-{item['url']}
+{item.get('url')}
 """
 
         )
